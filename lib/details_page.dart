@@ -21,7 +21,6 @@ class DetailsPage extends StatelessWidget {
           TextCustom(textTitle: "Gender", data: userKey.gender),
           TextCustom(textTitle: "Year & Section", data: userKey.section),
           TextCustom(textTitle: "Course", data: userKey.course),
-
         ],
       ),
     );

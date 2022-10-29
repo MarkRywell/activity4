@@ -10,7 +10,7 @@ class FormPage extends StatefulWidget {
 
 class _FormPageState extends State<FormPage> {
 
-  var formKey = GlobalKey<FormFieldState>();
+  var formKey = GlobalKey<FormState>();
   List genders = ['Male', 'Female', 'Others'];
   var selectedGender = '';
 
@@ -19,7 +19,6 @@ class _FormPageState extends State<FormPage> {
   TextEditingController birthdayController = TextEditingController();
   TextEditingController courseController = TextEditingController();
   TextEditingController sectionController = TextEditingController();
-  TextEditingController genderController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +41,7 @@ class _FormPageState extends State<FormPage> {
                 validator: (value) {
                   return value == null || value.isEmpty ? 'Enter ID' : null;
                 },
+
               ),
               TextFormField(
                 controller: nameController,
@@ -105,10 +105,10 @@ class _FormPageState extends State<FormPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
-                    var valid = formKey.currentState!.validate();
 
-                    if(valid){
-                      Student(
+                    if(formKey.currentState!.validate()){
+
+                      var newStudent  = Student(
                           id: int.parse(idController.text),
                           name: nameController.text,
                           birthday: birthdayController.text,
@@ -116,8 +116,9 @@ class _FormPageState extends State<FormPage> {
                           section: sectionController.text,
                           gender: selectedGender
                       );
-
+                      Navigator.pop(context, newStudent);
                     }
+
                   },
                   child: const Text("Submit"))
             ],

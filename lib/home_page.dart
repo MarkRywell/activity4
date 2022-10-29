@@ -21,8 +21,19 @@ class _HomePageState extends State<HomePage> {
         section: "3R1",
         gender: "Male"
     )
+
   ];
 
+  @override
+  void initState(){
+
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+}
 
 
   @override
@@ -38,6 +49,7 @@ class _HomePageState extends State<HomePage> {
             final user = users[index];
 
             return Dismissible(
+                direction: DismissDirection.endToStart,
                 key: Key(user.id.toString()),
                 child: ListTile(
 
@@ -53,10 +65,13 @@ class _HomePageState extends State<HomePage> {
           }
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
+          onPressed: () async {
+            var newStudent = await Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const FormPage())
             );
+            setState(() {
+              users.add(newStudent);
+            });
           },
           child: const Icon(Icons.add)
       ),
