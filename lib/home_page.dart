@@ -54,8 +54,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 direction: DismissDirection.endToStart,
                 key: Key(user.id.toString()),
+                onDismissed: (direction) {
+                  setState(() {
+                    users.removeAt(index);
+                    });
+                },
                 child: ListTile(
-
                   title: Text(user.name),
                   subtitle: Text('${user.course} - ${user.section}'),
                   onTap: () {
