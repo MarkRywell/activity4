@@ -11,7 +11,7 @@ class FormPage extends StatefulWidget {
 class _FormPageState extends State<FormPage> {
 
   var formKey = GlobalKey<FormState>();
-  List genders = ['Male', 'Female', 'Others'];
+
   var selectedGender = '';
 
   TextEditingController idController = TextEditingController();
@@ -36,6 +36,7 @@ class _FormPageState extends State<FormPage> {
                 controller: idController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
+                    hintText: "E.g. 2020302619",
                     labelText: "ID Number"
                 ),
                 validator: (value) {
@@ -47,6 +48,7 @@ class _FormPageState extends State<FormPage> {
                 controller: nameController,
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
+                    hintText: "E.g. Mark Rywell G. Gaje",
                     labelText: "Name"
                 ),
                 validator: (value) {
@@ -57,6 +59,7 @@ class _FormPageState extends State<FormPage> {
                 controller: birthdayController,
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
+                    hintText: "E.g. 05/31/2001",
                     labelText: "Birthdate"
                 ),
                 validator: (value) {
@@ -67,6 +70,7 @@ class _FormPageState extends State<FormPage> {
                 controller: courseController,
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
+                    hintText: "E.g. BSIT",
                     labelText: "Course"
                 ),
                 validator: (value) {
@@ -77,6 +81,7 @@ class _FormPageState extends State<FormPage> {
                 controller: sectionController,
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
+                    hintText: "E.g. 3R1",
                     labelText: "Section"
                 ),
                 validator: (value) {
@@ -120,7 +125,8 @@ class _FormPageState extends State<FormPage> {
                     }
 
                   },
-                  child: const Text("Submit"))
+                  child: const Text("Submit")
+              )
             ],
           ),
         )

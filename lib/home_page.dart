@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Activity 4'),
+        title: const Text('Activity #4'),
       ),
 
       body: ListView.builder(
@@ -49,6 +49,9 @@ class _HomePageState extends State<HomePage> {
             final user = users[index];
 
             return Dismissible(
+                background: Container(
+                  color: Colors.blue[200],
+                ),
                 direction: DismissDirection.endToStart,
                 key: Key(user.id.toString()),
                 child: ListTile(
