@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:activity4/student.dart';
+import 'package:activity4/home_page.dart';
+
+import 'package:flutter/widgets.dart';
+import 'package:sqflite/sqflite.dart';
+
 
 class FormPage extends StatefulWidget {
-  const FormPage({Key? key}) : super(key: key);
+
+  final database;
+
+  FormPage({Key? key, required this.database}) : super(key: key);
 
   @override
   State<FormPage> createState() => _FormPageState();
@@ -19,6 +27,18 @@ class _FormPageState extends State<FormPage> {
   TextEditingController birthdayController = TextEditingController();
   TextEditingController courseController = TextEditingController();
   TextEditingController sectionController = TextEditingController();
+
+  @override
+  Future<void> insertStudent(Student student) async {
+
+    final Database db = await widget.database;
+
+    await db.insert(
+      'students',
+      student.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +129,7 @@ class _FormPageState extends State<FormPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
 
                     if(formKey.currentState!.validate()){
 
@@ -121,7 +141,9 @@ class _FormPageState extends State<FormPage> {
                           section: sectionController.text,
                           gender: selectedGender
                       );
-                      Navigator.pop(context, newStudent);
+
+                      await insertStudent(newStudent);
+                      Navigator.pop(context);
                     }
 
                   },

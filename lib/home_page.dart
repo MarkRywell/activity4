@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:activity4/details_page.dart';
 import 'package:activity4/student.dart';
 import 'package:activity4/form_page.dart';
+import 'package:flutter/widgets.dart';
+import 'package:sqflite/sqflite.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+
+  final database;
+
+  const HomePage({Key? key, required this.database}) : super(key: key);
+
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -12,28 +18,74 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List <Student> users = [
-    Student (
-        id : 20200202,
-        name: "Mark Gaje",
-        birthday: "May 31, 2001",
-        course: "BSIT",
-        section: "3R1",
-        gender: "Male"
-    )
+  Future<List<Student>> students() async {
+    // Get a reference to the database.
+    final Database db = await widget.database;
 
-  ];
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps = await db.query('students');
+
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(maps.length, (i) {
+
+      return Student(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        birthday: maps[i]['birthday'],
+        course: maps[i]['course'],
+        section:  maps[i]['section'],
+        gender:  maps[i]['gender'],
+      );
+    });
+  }
+
+  Future<void> deleteStudent(int id) async {
+    // Get a reference to the database.
+    final db = await widget.database;
+
+    // Remove the Dog from the database.
+    await db.delete(
+      'students',
+      // Use a `where` clause to delete a specific dog.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> updateStudent(Student student) async {
+    // Get a reference to the database.
+    final db = await widget.database;
+
+    // Update the given Dog.
+    await db.update(
+      'dogs',
+      student.toMap(),
+      // Ensure that the Dog has a matching id.
+      where: 'id = ?',
+      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      whereArgs: [student.id],
+    );
+  }
+
+  List <Student> students_list = [];
+
+
+  void convertFutureListToList() async {
+    students_list = await students();
+  }
+
 
   @override
   void initState(){
-
+    convertFutureListToList();
     super.initState();
   }
 
   @override
   void dispose(){
     super.dispose();
-}
+  }
 
 
   @override
@@ -42,11 +94,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Activity #4'),
       ),
-
       body: ListView.builder(
-          itemCount: users.length,
+          itemCount: students_list.length,
           itemBuilder: (context, index) {
-            final user = users[index];
+            final user = students_list[index];
 
             return Dismissible(
                 background: Container(
@@ -55,9 +106,7 @@ class _HomePageState extends State<HomePage> {
                 direction: DismissDirection.endToStart,
                 key: Key(user.id.toString()),
                 onDismissed: (direction) {
-                  setState(() {
-                    users.removeAt(index);
-                    });
+                    deleteStudent(user.id);
                 },
                 child: ListTile(
                   title: Text(user.name),
@@ -73,12 +122,13 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            var newStudent = await Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const FormPage())
+            await Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => FormPage(database: widget.database))
             );
             setState(() {
-              users.add(newStudent);
+              convertFutureListToList();
             });
+
           },
           child: const Icon(Icons.add)
       ),
