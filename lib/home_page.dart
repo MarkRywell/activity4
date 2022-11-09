@@ -22,10 +22,10 @@ class _HomePageState extends State<HomePage> {
     // Get a reference to the database.
     final Database db = await widget.database;
 
-    // Query the table for all The Dogs.
+    // Query the table for all The Student.
     final List<Map<String, dynamic>> maps = await db.query('students');
 
-    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    // Convert the List<Map<String, dynamic> into a List<Student>.
     return List.generate(maps.length, (i) {
 
       return Student(
@@ -46,9 +46,9 @@ class _HomePageState extends State<HomePage> {
     // Remove the Dog from the database.
     await db.delete(
       'students',
-      // Use a `where` clause to delete a specific dog.
+      // Use a `where` clause to delete a specific student.
       where: 'id = ?',
-      // Pass the Dog's id as a whereArg to prevent SQL injection.
+      // Pass the Student's id as a whereArg to prevent SQL injection.
       whereArgs: [id],
     );
   }
@@ -57,11 +57,11 @@ class _HomePageState extends State<HomePage> {
     // Get a reference to the database.
     final db = await widget.database;
 
-    // Update the given Dog.
+    // Update the given Student.
     await db.update(
-      'dogs',
+      'student',
       student.toMap(),
-      // Ensure that the Dog has a matching id.
+      // Ensure that the Student has a matching id.
       where: 'id = ?',
       // Pass the Dog's id as a whereArg to prevent SQL injection.
       whereArgs: [student.id],
@@ -93,6 +93,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Activity #4'),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.edit),
+          onPressed: () {
+
+          },),
+        ]
       ),
       body: ListView.builder(
           itemCount: students_list.length,

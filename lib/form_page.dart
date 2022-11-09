@@ -19,7 +19,6 @@ class FormPage extends StatefulWidget {
 class _FormPageState extends State<FormPage> {
 
   var formKey = GlobalKey<FormState>();
-
   var selectedGender = '';
 
   TextEditingController idController = TextEditingController();
@@ -48,7 +47,7 @@ class _FormPageState extends State<FormPage> {
         ),
         body: Form(
           key: formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
+          autovalidateMode: AutovalidateMode.disabled,
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
@@ -109,6 +108,7 @@ class _FormPageState extends State<FormPage> {
                 },
               ),
               DropdownButtonFormField(
+                hint: Text("Gender"),
                   items: const [
                     DropdownMenuItem(
                         value: "Male",
@@ -125,15 +125,16 @@ class _FormPageState extends State<FormPage> {
                   ],
                   onChanged: (value) {
                     selectedGender = value!;
-                  }
+                  },
+                  validator: (value){
+                    return value == null || value.isEmpty ? 'Select Gender' : null;
+                    },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () async {
-
-                    if(formKey.currentState!.validate()){
-
-                      var newStudent  = Student(
+                    if (formKey.currentState!.validate()) {
+                      var newStudent = Student(
                           id: int.parse(idController.text),
                           name: nameController.text,
                           birthday: birthdayController.text,
@@ -145,9 +146,8 @@ class _FormPageState extends State<FormPage> {
                       await insertStudent(newStudent);
                       Navigator.pop(context);
                     }
-
                   },
-                  child: const Text("Submit")
+                    child: const Text("Submit")
               )
             ],
           ),
